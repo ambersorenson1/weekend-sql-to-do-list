@@ -11,7 +11,6 @@ function setupTask() {
     console.log('setting up a new task');
     let taskToBeCompleted = {
       task: $('#taskIn').val(),
-      instructions: $('#instructionsIn').val(),
     }
     $.ajax({
       type: 'POST',
@@ -29,7 +28,6 @@ function setupTask() {
     //function to clear inputs after they have been added
   function clearInputs()  {
     $('#taskIn').val(''),
-    $('#instructionsIn').val(''),
     console.log('Inputs cleared');
   };
   
@@ -45,13 +43,47 @@ function setupTask() {
         $('#viewToDoItems').append(`
           <tr>
             <td>${task.task}</td>
-            <td>${task.instructions}</td>
-            <td><button type="button" id="deleteButton">$Delete Task</button></td>
+            <td><button class="delete-btn" data-id="${task.id}">❌</button></td>
+            <td><button class="complete-btn" data-id="${task.id}">✅</button></td>
           </tr>
         `);
         }
     });
   } // end renderTasks
+
+  function deleteTask() {
+    const taskIdToDelete = $(this).data('id');
+    $.ajax({
+      type: 'DELETE',
+      url: `/tasks/${taskIdToDelete}`
+    }).then((response) => {
+      console.log(response);
+      renderTasks();
+    }).catch((error) => {
+      console.log('ERROR');
+      
+    })
+  };
+
+  // function updateTask() {
+  //   console.log('click!')
+  //   const updatedTask = {
+  //     id: $('#id-update').val(),
+  //     task: $('#task-update').val(),
+  //   }
+  //   $.ajax({
+  //     method: 'PUT',
+  //     url: `/tasks/${updatedTask.id}`,
+  //     data: updatedSong
+  //   }).then((res) => {
+  //     console.log('you sent a PUT!')
+  //     renderTasks();
+  //   }).catch((err) => {
+  //     console.error(err);
+  //   });
+    
+  // }
+
 
 
 

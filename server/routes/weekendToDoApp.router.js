@@ -28,13 +28,12 @@ weekendToDoAppRouter.post('/', (req, res) => {
 
   const sqlText =(`
     INSERT INTO "toDoList"
-    ("task", "instructions")
+    ("task")
     VALUES
-    ($1, $2);
+    ($1);
     `);
   const sqlValues = [
     newTask.task,
-    newTask.instructions,
   ];
   pool.query(sqlText, sqlValues)
     .then((dbRes) => {
@@ -46,4 +45,51 @@ weekendToDoAppRouter.post('/', (req, res) => {
     })
 });
 
+//DELETE
+weekendToDoAppRouter.delete('/:id', (req, res) => {
+  console.log('DELETE /tasks/:id');
+  console.log('req.params:', req.params);
+  const taskIdToDelete = req.params.id;
+  const sqlValues = [ taskIdToDelete ];
+  const sqlText = `
+    DELETE FROM "toDoList"
+      WHERE "id"=$1;
+  `;
+  pool.query(sqlText, sqlValues)
+    .then((dbResult) => {
+      res.sendStatus(200);
+    })
+    .catch((dbErr) => {
+      console.error(dbErr);
+      res.sendStatus(500);
+    })
+});
+
+
+//PUT
+// router.put('/update/:id', (req, res) => {
+//   console.log('req.params', req.params);
+//   console.log('req.body', req.body);
+//   const taskIdToUpdate = req.params.id;
+//   let currentStatus = req.body.currentStatus;
+//   currentStatus = Y;
+//   const sqlText = `
+//     UPDATE "toDoList"
+//       SET "complete"=$1
+//       WHERE "id"=$2;
+//   `;
+//   const sqlValues = [
+//     currentStatus,
+//     taskIdToUpdate
+//   ]
+
+//   pool.query(sqlText, sqlValues)
+//     .then((dbResult) => {
+//       res.sendStatus(200);
+//     })
+//     .catch((dbErr) => {
+//       console.error(dbErr);
+//       res.sendStatus(500);
+//     })
+// });
 
