@@ -5,6 +5,7 @@ function onReady () {
   renderTasks();
 $(document).on('click', '#addButton', setupTask);
 $(document).on('click', '.delete-btn', deleteTask);
+$(document).on('click', '.complete-btn', completeTasks)
 }
 //function for when a user clicks on the add button
 //we are grabbing the values using jQuery and creating a new object
@@ -12,7 +13,8 @@ function setupTask() {
     console.log('setting up a new task');
     let taskToBeCompleted = {
       task: $('#taskIn').val(),
-      additionalNotes: $('#notesIn').val(),
+      notes: $('#notesIn').val(),
+      complete: $('#taskDoneOrNot').val(),
     }
     $.ajax({
       type: 'POST',
@@ -31,11 +33,12 @@ function setupTask() {
   function clearInputs()  {
     $('#taskIn').val(''),
     $('#notesIn').val(''),
+    $('#taskDoneOrNot').val(''),
     console.log('Inputs cleared');
   };
   
 
-   function renderTasks(tasks) {
+   function renderTasks() {
     $.ajax({
       type: 'GET',
       url: '/tasks'
@@ -43,16 +46,28 @@ function setupTask() {
       $("#viewToDoItems").empty();
       console.log("GET /tasks response", response);
       for (let task of response) {
+        if (task.complete === 'N') {
         $('#viewToDoItems').append(`
           <tr>
             <td>${task.task}</td>
             <td>${task.notes}</td>
             <td>${task.complete}</td>
-            <td><button class="delete-btn" data-id="${task.id}">❌</button></td>
-            <td><button class="complete-btn" type="checkbox" data-id="${task.id}"></button></td>
+            <td><button class="complete-btn" data-id="${task.id}">Complete ✅</button></td>
+            <td><button class="delete-btn" data-id="${task.id}">Delete ❌</button></td>
+          </tr>
+        `);
+        } else {
+          $('#viewToDoItems').append(`
+          <tr>
+            <td>${task.task}</td>
+            <td>${task.notes}</td>
+            <td>${task.complete}</td>
+            <td></td>
+            <td><button class="delete-btn" data-id="${task.id}">Delete ❌</button></td>
           </tr>
         `);
         }
+      }
     });
   } // end renderTasks
 
@@ -70,24 +85,20 @@ function setupTask() {
     })
   };
 
-  // function updateTask() {
-  //   console.log('click!')
-  //   const updatedTask = {
-  //     id: $('#id-update').val(),
-  //     task: $('#task-update').val(),
-  //   }
-  //   $.ajax({
-  //     method: 'PUT',
-  //     url: `/tasks/${updatedTask.id}`,
-  //     data: updatedSong
-  //   }).then((res) => {
-  //     console.log('you sent a PUT!')
-  //     renderTasks();
-  //   }).catch((err) => {
-  //     console.error(err);
-  //   });
+  function completeTasks() {
+    console.log('click!')
+    const updatedTask = $(this).data('id')
+    $.ajax({
+      method: 'PUT',
+      url: `/tasks/${updatedTask}`
+    }).then((res) => {
+      console.log('you sent a PUT!')
+      renderTasks();
+    }).catch((err) => {
+      console.error(err);
+    });
     
-  // }
+  }
 
 
 

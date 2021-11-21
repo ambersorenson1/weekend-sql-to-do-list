@@ -6,7 +6,7 @@
   <title>Document</title>
   <script src="scripts/jquery-3.6.0.min.js" charset="utf-8"></script>
   <script src="scripts/client.js" charset="utf-8"></script>
-  <!-- <link rel="stylesheet" href="script/style.css"> -->
+  <link rel="stylesheet" href="scripts/style.css">
 </head>
 <body>
   <header>
@@ -16,9 +16,10 @@
       <label for="task">Task:</label>
       <input type="text" id="taskIn" value="" placeholder="What is the task to do?">
       <input type="text" id="notesIn" placeholder="Additional Notes">
+      <input type="text" id="taskDoneOrNot" placeholder="Task Finished?">
       <button type="button" id="addButton">Add Task</button>
     </section>
-    <section>
+    <section class="color-scheme">
       <h2>To Do List</h2>
       <div>    
       </div>
@@ -27,9 +28,9 @@
           <tr>
             <th>Task</th>
             <th>Additional Notes</th>
-            <th>Done Now?</th>
-            <th>Delete Task</th>
+            <th>Task Finished (Y or N)</th>
             <th>Completed</th>
+            <th>Delete</th>
           </tr>
         </thead>
         <tbody id="viewToDoItems"></ul>
