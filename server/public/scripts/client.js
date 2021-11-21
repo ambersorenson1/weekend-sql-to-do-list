@@ -4,6 +4,7 @@ function onReady () {
   console.log('Weekend-Knockout ');
   renderTasks();
 $(document).on('click', '#addButton', setupTask);
+$(document).on('click', '.delete-btn', deleteTask);
 }
 //function for when a user clicks on the add button
 //we are grabbing the values using jQuery and creating a new object
@@ -11,6 +12,7 @@ function setupTask() {
     console.log('setting up a new task');
     let taskToBeCompleted = {
       task: $('#taskIn').val(),
+      additionalNotes: $('#notesIn').val(),
     }
     $.ajax({
       type: 'POST',
@@ -18,21 +20,22 @@ function setupTask() {
       data: taskToBeCompleted,
     }).then((response) => {
        console.log('Response from server.', response);
+       renderTasks();
     }).catch((error) => {
       console.error(error);
       });
-    renderTasks();
     clearInputs();
   }; // end taskToBeCompleted
 
     //function to clear inputs after they have been added
   function clearInputs()  {
     $('#taskIn').val(''),
+    $('#notesIn').val(''),
     console.log('Inputs cleared');
   };
   
 
-   function renderTasks() {
+   function renderTasks(tasks) {
     $.ajax({
       type: 'GET',
       url: '/tasks'
@@ -43,8 +46,10 @@ function setupTask() {
         $('#viewToDoItems').append(`
           <tr>
             <td>${task.task}</td>
+            <td>${task.notes}</td>
+            <td>${task.complete}</td>
             <td><button class="delete-btn" data-id="${task.id}">❌</button></td>
-            <td><button class="complete-btn" data-id="${task.id}">✅</button></td>
+            <td><button class="complete-btn" type="checkbox" data-id="${task.id}"></button></td>
           </tr>
         `);
         }
